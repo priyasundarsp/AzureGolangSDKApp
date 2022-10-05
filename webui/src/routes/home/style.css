@@ -1,0 +1,9 @@
+.title {
+  height: 75px !important;
+}
+
+.card_hover:hover {
+  -webkit-box-shadow: 2px -3px 36px 7px rgba(13, 175, 250, 0.22);
+  -moz-box-shadow: 2px -3px 36px 7px rgba(13, 175, 250, 0.22);
+  box-shadow: 2px -3px 36px 7px rgba(13, 175, 250, 0.22);
+}
