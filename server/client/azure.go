@@ -9,8 +9,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/network/armnetwork"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage"
 
-	"github.com/aravinu19/golang-web-azure-app/configs"
-	"github.com/aravinu19/golang-web-azure-app/logger"
+	"golang-web-azure-app/configs"
+	"golang-web-azure-app/logger"
 )
 
 var Creds *azidentity.ClientSecretCredential

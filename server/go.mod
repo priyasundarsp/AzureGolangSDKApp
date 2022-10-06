@@ -1,4 +1,4 @@
-module github.com/aravinu19/golang-web-azure-app
+module golang-web-azure-app
 
 go 1.19
 

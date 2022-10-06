@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aravinu19/golang-web-azure-app/logger"
+	"golang-web-azure-app/logger"
 )
 
 var Config Configurations

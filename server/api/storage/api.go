@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"golang-web-azure-app/client"
+	"golang-web-azure-app/configs"
+	"golang-web-azure-app/logger"
+
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/to"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage"
-	"github.com/aravinu19/golang-web-azure-app/client"
-	"github.com/aravinu19/golang-web-azure-app/configs"
-	"github.com/aravinu19/golang-web-azure-app/logger"
 	"github.com/gin-gonic/gin"
 )
 

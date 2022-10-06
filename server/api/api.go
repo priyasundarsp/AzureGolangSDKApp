@@ -1,10 +1,11 @@
 package api
 
 import (
-	"github.com/aravinu19/golang-web-azure-app/api/cosmosdb"
-	"github.com/aravinu19/golang-web-azure-app/api/storage"
-	"github.com/aravinu19/golang-web-azure-app/api/vnet"
-	"github.com/aravinu19/golang-web-azure-app/api/webapp"
+	"golang-web-azure-app/api/cosmosdb"
+	"golang-web-azure-app/api/storage"
+	"golang-web-azure-app/api/vnet"
+	"golang-web-azure-app/api/webapp"
+
 	"github.com/gin-gonic/gin"
 )
 

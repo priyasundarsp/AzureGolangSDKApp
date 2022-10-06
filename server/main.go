@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/aravinu19/golang-web-azure-app/api"
-	"github.com/aravinu19/golang-web-azure-app/client"
-	"github.com/aravinu19/golang-web-azure-app/configs"
-	"github.com/aravinu19/golang-web-azure-app/logger"
+	"golang-web-azure-app/api"
+	"golang-web-azure-app/client"
+	"golang-web-azure-app/configs"
+	"golang-web-azure-app/logger"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
