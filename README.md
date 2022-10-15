@@ -1,2 +1,2 @@
 # AzureGolangSDKApp
-Azure Sample app to show case basic resource management capabilities with Golang and React JS
+Azure Sample app to show case basic resource creation capabilities with Golang SDK and Preact
