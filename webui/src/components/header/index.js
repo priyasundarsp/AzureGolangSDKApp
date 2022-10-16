@@ -7,7 +7,7 @@ const Header = () => (
 			<div className='columns'>
 				<div className='column is-centered'>
 					<a class="navbar-item title app_title" href="/">
-						Azure Golang Demo App
+						Azure Golang SDK Sample App
 					</a>
 				</div>
 			</div>

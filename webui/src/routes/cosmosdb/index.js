@@ -27,7 +27,7 @@ const CosmosDB = () => {
             if (list.accounts.length > 0) {
                 setCurrentAccount(list.accounts[0])
             }
-            toast("🔄️ Refreshed", {
+            toast("🔃 Refreshed", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -148,7 +148,7 @@ const CosmosDB = () => {
                         Database Accounts
                     </h3>
                     <div className='is-flex-direction-row'>
-                        <button class={`button is-link is-light is-inline mx-2 ${isRefreshing ? "is-loading is-dark" : ""}`} onClick={load}>🔄️ Refresh</button>
+                        <button class={`button is-link is-light is-inline mx-2 ${isRefreshing ? "is-loading is-dark" : ""}`} onClick={load}>🔃 Refresh</button>
                         <button class={`button is-primary is-light is-inline mx-2`} onClick={() => { setIsCreateMode(true) }}>⚙️ Create Account</button>
                         <Link href='/'>
                             <button class={`button is-light is-inline mx-2`}>⬅️ Back</button>

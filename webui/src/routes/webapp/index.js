@@ -27,7 +27,7 @@ const WebApp = () => {
             if (list.webapps.length > 0) {
                 setCurrentWebapp(list.webapps[0])
             }
-            toast("🔄️ Refreshed", {
+            toast("🔃 Refreshed", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -148,7 +148,7 @@ const WebApp = () => {
                         Web Apps
                     </h3>
                     <div className='is-flex-direction-row'>
-                        <button class={`button is-link is-light is-inline mx-2 ${isRefreshing ? "is-loading is-dark" : ""}`} onClick={load}>🔄️ Refresh</button>
+                        <button class={`button is-link is-light is-inline mx-2 ${isRefreshing ? "is-loading is-dark" : ""}`} onClick={load}>🔃 Refresh</button>
                         <button class={`button is-primary is-light is-inline mx-2`} onClick={() => { setIsCreateMode(true) }}>⚙️ Create Web App</button>
                         <Link href='/'>
                             <button class={`button is-light is-inline mx-2`}>⬅️ Back</button>
@@ -191,15 +191,15 @@ const WebApp = () => {
                                             </tr>
                                             <tr>
                                                 <td>Host Name: </td>
-                                                <td><a href={currentWebapp.properties.defaultHostname} target="_blank" rel="noopener noreferrer">click to open in new tab</a></td>
+                                                <td><a href={`https://${currentWebapp.properties.defaultHostname}`} target="_blank" rel="noopener noreferrer">click to open in new tab</a></td>
                                             </tr>
                                             <tr>
-                                                <td>Enterprisse Grade CDN Status: </td>
+                                                <td>Enterprise Grade CDN Status: </td>
                                                 <td>{currentWebapp.properties.enterpriseGradeCdnStatus}</td>
                                             </tr>
                                             <tr>
                                                 <td>Content Distribution Endpoint: </td>
-                                                <td><a href={currentWebapp.properties.contentDistributionEndpoint} target="_blank" rel="noopener noreferrer">click to open in new tab</a></td>
+                                                <td><a href={`https://${currentWebapp.properties.contentDistributionEndpoint}`} target="_blank" rel="noopener noreferrer">click to open in new tab</a></td>
                                             </tr>
                                             <tr>
                                                 <button class={`button is-danger is-light my-4 ${isDeleting ? "is-loading is-outlined" : ""}`} onClick={() => deleteWebApp(currentWebapp.name)}>❌ Delete</button>

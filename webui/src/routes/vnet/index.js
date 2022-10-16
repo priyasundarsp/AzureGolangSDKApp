@@ -29,7 +29,7 @@ const VNet = () => {
             if (list.networks.length > 0) {
                 setCurrentNetwork(list.networks[0])
             }
-            toast("🔄️ Refreshed", {
+            toast("🔃 Refreshed", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -152,7 +152,7 @@ const VNet = () => {
                         Virtual Networks
                     </h3>
                     <div className='is-flex-direction-row'>
-                        <button class={`button is-link is-light is-inline mx-2 ${isRefreshing ? "is-loading is-dark" : ""}`} onClick={load}>🔄️ Refresh</button>
+                        <button class={`button is-link is-light is-inline mx-2 ${isRefreshing ? "is-loading is-dark" : ""}`} onClick={load}>🔃 Refresh</button>
                         <button class={`button is-primary is-light is-inline mx-2`} onClick={() => { setIsCreateMode(true) }}>⚙️ Create Virtual Network</button>
                         <Link href='/'>
                             <button class={`button is-light is-inline mx-2`}>⬅️ Back</button>
