@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-go-app
+spec:
+  selector:
+    matchLabels:
+      app: azure-go-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: azure-go-app
+    spec:
+      containers:
+        - name: azure-go-app
+          image: "<img url>"
+          envFrom:
+            - secretRef:
+                name: az-sp
+          env:
+            - name: "PORT"
+              value: "8000"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - name: go-app-port
+              containerPort: 8000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webui
+spec:
+  selector:
+    matchLabels:
+      app: azure-go-app
+  template:
+    metadata:
+      labels:
+        app: azure-go-app
+    spec:
+      containers:
+        - name: webui
+          image: "<img url>"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - name: web-port
+              containerPort: 80
