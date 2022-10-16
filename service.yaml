@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-go-app
+spec:
+  selector:
+    app: azure-go-app
+  ports:
+  - port: 8000
+    targetPort: go-app-port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webui
+spec:
+  selector:
+    app: azure-go-app
+  ports:
+  - port: 8080
+    targetPort: web-port
+
+
+
+
