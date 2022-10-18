@@ -15,17 +15,13 @@ spec:
     spec:
       containers:
         - name: azure-go-app
-          image: "<img url>"
+          image: "azconfdemoacr01.azurecr.io/azuregolangimagesazuregolangsdkbackend:v1"
           envFrom:
             - secretRef:
                 name: az-sp
           env:
             - name: "PORT"
               value: "8000"
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
           ports:
             - name: go-app-port
               containerPort: 8000
@@ -39,6 +35,7 @@ spec:
   selector:
     matchLabels:
       app: azure-go-app
+  replicas: 2
   template:
     metadata:
       labels:
@@ -46,11 +43,7 @@ spec:
     spec:
       containers:
         - name: webui
-          image: "<img url>"
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
+          image: "azconfdemoacr01.azurecr.io/azuregolangimages/azuresdkwebuifrontend:v1"
           ports:
             - name: web-port
               containerPort: 80

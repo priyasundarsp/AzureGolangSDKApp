@@ -1,0 +1,27 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aks-helloworld
+  labels:
+    name: az-app-ig
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - http:
+      paths:
+        - pathType: Prefix
+          path: "/api"
+          backend:
+            service:
+              name: azure-go-app
+              port:
+                name: go-app-port
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: webui
+              port:
+                name: web-port
