@@ -64,6 +64,8 @@ stages:
     - upload: manifests
       artifact: manifests
 
+
+
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
@@ -73,7 +75,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'priyasundarspAzureGolangSDKApp.azuregolankapp'
+    # environment: 'priyasundarspAzureGolangSDKApp.azuregolankapp'
     strategy:
       runOnce:
         deploy:
