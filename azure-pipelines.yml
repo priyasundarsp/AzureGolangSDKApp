@@ -11,7 +11,7 @@ resources:
 variables:
 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '9e40307b-8ec6-44c2-bb21-8e809e2b95a3'
+  dockerRegistryServiceConnection: 'azdevconfacr-service-connection'
   # imageRepository: 'priyasundarspazuregolangsdkapp'
   imageRepositoryBE: 'priyasundarspazuregolangsdkapp/server'
   imageRepositoryFE: 'priyasundarspazuregolangsdkapp/webui'
@@ -37,12 +37,11 @@ stages:
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
-        command: buildAndPush
-        repository: $(imageRepositoryBE)
-        dockerfile: $(dockerfilePathGoApp)
         containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        repository: '$(imageRepositoryBE)'
+        command: 'buildAndPush'
+        Dockerfile: '$(dockerfilePathGoApp)'
+        tags: '$(tag)'
 
     - upload: manifests
       artifact: manifests
@@ -83,7 +82,7 @@ stages:
             displayName: Deploy with K8s CLI
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'AZCONFDEMOAKS-default'
+              kubernetesServiceEndpoint: 'azdevconfaks-service-connection'
               namespace: 'default'
               command: 'apply'
               useConfigurationFile: true
@@ -193,7 +192,6 @@ stages:
               azureSubscriptionEndpointForSecrets: 'Azure Pass - Sponsorship (1575c510-a34c-4b98-a704-027e9f994f54)'
               azureContainerRegistry: 'azconfdemoacr.azurecr.io'
               secretName: '$(imagePullSecret)'
-              forceUpdate: true
               
             
           # - task: KubernetesManifest@0
