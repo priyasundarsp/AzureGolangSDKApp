@@ -188,7 +188,6 @@ stages:
                               name: webui
                               port:
                                 name: web-port
-              arguments: '-f'
               secretType: 'dockerRegistry'
               containerRegistryType: 'Azure Container Registry'
               azureSubscriptionEndpointForSecrets: 'Azure Pass - Sponsorship (1575c510-a34c-4b98-a704-027e9f994f54)'
