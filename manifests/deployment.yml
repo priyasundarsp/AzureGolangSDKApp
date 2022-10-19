@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: priyasundarspazuregolangsdkapp 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: priyasundarspazuregolangsdkapp
+  template:
+    metadata:
+      labels:
+        app: priyasundarspazuregolangsdkapp 
+    spec:
+      containers:
+        - name: priyasundarspazuregolangsdkapp 
+          image: azconfdemoacr.azurecr.io/priyasundarspazuregolangsdkapp
+          ports:
+          - containerPort: 8080
