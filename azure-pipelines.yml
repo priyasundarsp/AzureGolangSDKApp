@@ -75,7 +75,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    # environment: 'priyasundarspAzureGolangSDKApp.azuregolankapp'
+    environment: 'azuregolangsdkaks-env.default'
     strategy:
       runOnce:
         deploy:
