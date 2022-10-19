@@ -53,5 +53,23 @@ npm run dev
 Step-4:
 verify from browser => localhost:<port>/
 
-Now all set to make a API call to server from UI ,happy experimenting :-)
+Now all set to make a API call to server from UI ,happy experimenting with golang :-)
+
+
+# STEPS FOR AZURE DEVOPS CI PIPELINE CREATION:
+
+## Prerequisties
+
+1.Kubernetes cluster
+2.Azure Container Registery
+
+Step-1:
+Go to your devops project -> create new CI -> Specify your fork repo for AzureGolangSDKApp 
+
+Step-2:
+use the https://github.com/priyasundarsp/AzureGolangSDKApp/blob/main/azure-pipelines.yml file to config CI using yaml config and run it 
+
+Reference Kubernetes documents:
+https://learn.microsoft.com/en-us/azure/aks/ingress-basic?tabs=azure-cli
+https://learn.microsoft.com/en-us/azure/aks/http-application-routing
 
