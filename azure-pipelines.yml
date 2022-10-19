@@ -11,10 +11,13 @@ resources:
 variables:
 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '9e40307b-8ec6-44c2-bb21-8e809e2b95a3'
-  imageRepository: 'priyasundarspazuregolangsdkapp'
+  dockerRegistryServiceConnection: 'azdevconfacr-service-connection'
+  # imageRepository: 'priyasundarspazuregolangsdkapp'
+  imageRepositoryBE: 'priyasundarspazuregolangsdkapp/server'
+  imageRepositoryFE: 'priyasundarspazuregolangsdkapp/webui'
   containerRegistry: 'azconfdemoacr.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
+  dockerfilePathGoApp: 'server/Dockerfile'
+  dockerfilePathPreactApp: 'webui/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'azconfdemoacr9302f921-auth'
 
@@ -24,10 +27,27 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build stage
+  displayName: Build
   jobs:
-  - job: Build
-    displayName: Build
+  - job: BuildGoApp
+    displayName: Build Golang App
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: '$(imageRepositoryBE)'
+        command: 'buildAndPush'
+        Dockerfile: '$(dockerfilePathGoApp)'
+        tags: '$(tag)'
+
+    - upload: manifests
+      artifact: manifests
+
+  - job: BuildPreactApp
+    displayName: Build Preact App
     pool:
       vmImage: $(vmImageName)
     steps:
@@ -35,14 +55,16 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
+        repository: $(imageRepositoryFE)
+        dockerfile: $(dockerfilePathPreactApp)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
 
     - upload: manifests
       artifact: manifests
+
+
 
 - stage: Deploy
   displayName: Deploy stage
@@ -53,27 +75,152 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'priyasundarspAzureGolangSDKApp.azuregolankapp'
+    environment: 'azuregolangsdkaks-env.default'
     strategy:
       runOnce:
         deploy:
           steps:
-          - task: KubernetesManifest@0
-            displayName: Create imagePullSecret
+          - task: Kubernetes@1
+            displayName: Deploy with K8s CLI
             inputs:
-              action: createSecret
-              secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+              connectionType: 'Kubernetes Service Connection'
+              kubernetesServiceEndpoint: 'AZCONFDEMOAKS-default'
+              namespace: 'default'
+              command: 'apply'
+              useConfigurationFile: true
+              configurationType: 'inline'
+              inline: |
+                ---
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: azure-go-app
+                spec:
+                  selector:
+                    matchLabels:
+                      app: azure-go-app
+                  replicas: 2
+                  template:
+                    metadata:
+                      labels:
+                        app: azure-go-app
+                    spec:
+                      containers:
+                        - name: azure-go-app
+                          # image: "$(containerRegistry)/$(imageRepositoryBE):latest"
+                          image: "$(containerRegistry)/$(imageRepositoryBE):$(tag)"
+                          envFrom:
+                            - secretRef:
+                                name: az-sp
+                          env:
+                            - name: "PORT"
+                              value: "8000"
+                          ports:
+                            - name: go-app-port
+                              containerPort: 8000
+                      imagePullSecrets:
+                        - name: "$(imagePullSecret)"
+                ---
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: webui
+                spec:
+                  selector:
+                    matchLabels:
+                      app: azure-go-app
+                  replicas: 2
+                  template:
+                    metadata:
+                      labels:
+                        app: azure-go-app
+                    spec:
+                      containers:
+                        - name: webui
+                          # image: "$(containerRegistry)/$(imageRepositoryFE):latest"
+                          image: "$(containerRegistry)/$(imageRepositoryFE):$(tag)"
+                          ports:
+                            - name: web-port
+                              containerPort: 80
+                      imagePullSecrets:
+                        - name: "$(imagePullSecret)"
+                ---
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: azure-go-app
+                spec:
+                  selector:
+                    app: azure-go-app
+                  ports:
+                  - port: 8000
+                    targetPort: go-app-port
+                
+                ---
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: webui
+                spec:
+                  selector:
+                    app: azure-go-app
+                  ports:
+                  - port: 8080
+                    targetPort: web-port
+                ---
+                apiVersion: networking.k8s.io/v1
+                kind: Ingress
+                metadata:
+                  name: aks-nginx-ig
+                  labels:
+                    name: az-app-ig
+                  annotations:
+                    kubernetes.io/ingress.class: addon-http-application-routing
+                spec:
+                  rules:
+                  - http:
+                      paths:
+                        - pathType: Prefix
+                          path: "/api"
+                          backend:
+                            service:
+                              name: azure-go-app
+                              port:
+                                name: go-app-port
+                        - pathType: Prefix
+                          path: "/"
+                          backend:
+                            service:
+                              name: webui
+                              port:
+                                name: web-port
+              secretType: 'dockerRegistry'
+              containerRegistryType: 'Azure Container Registry'
+              azureSubscriptionEndpointForSecrets: 'Azure Pass - Sponsorship (1575c510-a34c-4b98-a704-027e9f994f54)'
+              azureContainerRegistry: 'azconfdemoacr01.azurecr.io'
+              secretName: '$(imagePullSecret)'
+              
+            
+          # - task: KubernetesManifest@0
+          #   displayName: Create imagePullSecret
+          #   inputs:
+          #     action: 'createSecret'
+          #     kubernetesServiceConnection: 'AZCONFDEMOAKS-azuregolankapp'
+          #     secretType: 'dockerRegistry'
+          #     secretName: '$(imagePullSecret)'
+          #     dockerRegistryEndpoint: 'AZCONFDEMOACR'
+          #     namespace: default
 
-          - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
-            inputs:
-              action: deploy
-              manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              imagePullSecrets: |
-                $(imagePullSecret)
-              containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+          # - task: KubernetesManifest@0
+          #   displayName: Deploy to Kubernetes cluster
+          #   inputs:
+          #     action: deploy
+          #     manifests: |
+          #       $(Pipeline.Workspace)/manifests/deployment.yml
+          #       $(Pipeline.Workspace)/manifests/service.yml
+          #     imagePullSecrets: |
+          #       $(imagePullSecret)
+          #     containers: |
+          #       $(containerRegistry)/$(imageRepositoryBE):$(tag)
+          #       $(containerRegistry)/$(imageRepositoryFE):$(tag)
 
