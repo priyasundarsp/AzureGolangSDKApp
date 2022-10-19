@@ -79,26 +79,141 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: KubernetesManifest@0
-            displayName: Create imagePullSecret
+          - task: Kubernetes@1
+            displayName: Deploy with K8s CLI
             inputs:
-              action: 'createSecret'
-              kubernetesServiceConnection: 'AZCONFDEMOAKS-azuregolankapp'
+              connectionType: 'Kubernetes Service Connection'
+              kubernetesServiceEndpoint: 'AZCONFDEMOAKS-azuregolankapp'
+              namespace: 'default'
+              command: 'apply'
+              useConfigurationFile: true
+              configurationType: 'inline'
+              inline: |
+                ---
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: azure-go-app
+                spec:
+                  selector:
+                    matchLabels:
+                      app: azure-go-app
+                  replicas: 2
+                  template:
+                    metadata:
+                      labels:
+                        app: azure-go-app
+                    spec:
+                      containers:
+                        - name: azure-go-app
+                          image: "$(containerRegistry)/$(imageRepositoryBE):$(tag)"
+                          envFrom:
+                            - secretRef:
+                                name: az-sp
+                          env:
+                            - name: "PORT"
+                              value: "8000"
+                          ports:
+                            - name: go-app-port
+                              containerPort: 8000
+                ---
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: webui
+                spec:
+                  selector:
+                    matchLabels:
+                      app: azure-go-app
+                  replicas: 2
+                  template:
+                    metadata:
+                      labels:
+                        app: azure-go-app
+                    spec:
+                      containers:
+                        - name: webui
+                          image: "$(containerRegistry)/$(imageRepositoryFE):$(tag)"
+                          ports:
+                            - name: web-port
+                              containerPort: 80
+                ---
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: azure-go-app
+                spec:
+                  selector:
+                    app: azure-go-app
+                  ports:
+                  - port: 8000
+                    targetPort: go-app-port
+                
+                ---
+                apiVersion: v1
+                kind: Service
+                metadata:
+                  name: webui
+                spec:
+                  selector:
+                    app: azure-go-app
+                  ports:
+                  - port: 8080
+                    targetPort: web-port
+                ---
+                apiVersion: networking.k8s.io/v1
+                kind: Ingress
+                metadata:
+                  name: aks-nginx-ig
+                  labels:
+                    name: az-app-ig
+                  annotations:
+                    kubernetes.io/ingress.class: addon-http-application-routing
+                spec:
+                  rules:
+                  - http:
+                      paths:
+                        - pathType: Prefix
+                          path: "/api"
+                          backend:
+                            service:
+                              name: azure-go-app
+                              port:
+                                name: go-app-port
+                        - pathType: Prefix
+                          path: "/"
+                          backend:
+                            service:
+                              name: webui
+                              port:
+                                name: web-port
+              arguments: '-f'
               secretType: 'dockerRegistry'
+              containerRegistryType: 'Azure Container Registry'
+              azureSubscriptionEndpointForSecrets: 'Azure Pass - Sponsorship (1575c510-a34c-4b98-a704-027e9f994f54)'
+              azureContainerRegistry: 'azconfdemoacr.azurecr.io'
               secretName: '$(imagePullSecret)'
-              dockerRegistryEndpoint: 'AZCONFDEMOACR'
-              namespace: default
+            
+          # - task: KubernetesManifest@0
+          #   displayName: Create imagePullSecret
+          #   inputs:
+          #     action: 'createSecret'
+          #     kubernetesServiceConnection: 'AZCONFDEMOAKS-azuregolankapp'
+          #     secretType: 'dockerRegistry'
+          #     secretName: '$(imagePullSecret)'
+          #     dockerRegistryEndpoint: 'AZCONFDEMOACR'
+          #     namespace: default
 
-          - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
-            inputs:
-              action: deploy
-              manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              imagePullSecrets: |
-                $(imagePullSecret)
-              containers: |
-                $(containerRegistry)/$(imageRepositoryBE):$(tag)
-                $(containerRegistry)/$(imageRepositoryFE):$(tag)
+          # - task: KubernetesManifest@0
+          #   displayName: Deploy to Kubernetes cluster
+          #   inputs:
+          #     action: deploy
+          #     manifests: |
+          #       $(Pipeline.Workspace)/manifests/deployment.yml
+          #       $(Pipeline.Workspace)/manifests/service.yml
+          #     imagePullSecrets: |
+          #       $(imagePullSecret)
+          #     containers: |
+          #       $(containerRegistry)/$(imageRepositoryBE):$(tag)
+          #       $(containerRegistry)/$(imageRepositoryFE):$(tag)
 
