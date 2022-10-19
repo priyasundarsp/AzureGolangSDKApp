@@ -14,7 +14,8 @@ variables:
   dockerRegistryServiceConnection: '9e40307b-8ec6-44c2-bb21-8e809e2b95a3'
   imageRepository: 'priyasundarspazuregolangsdkapp'
   containerRegistry: 'azconfdemoacr.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
+  dockerfilePathGoApp: 'server/Dockerfile'
+  dockerfilePathPreactApp: 'webui/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'azconfdemoacr9302f921-auth'
 
@@ -24,10 +25,10 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build stage
+  displayName: Build
   jobs:
-  - job: Build
-    displayName: Build
+  - job: BuildGoApp
+    displayName: Build Golang App
     pool:
       vmImage: $(vmImageName)
     steps:
@@ -36,7 +37,25 @@ stages:
       inputs:
         command: buildAndPush
         repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
+        dockerfile: $(dockerfilePathGoApp)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+    - upload: manifests
+      artifact: manifests
+
+  - job: BuildPreactApp
+    displayName: Build Preact App
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePathPreactApp)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
