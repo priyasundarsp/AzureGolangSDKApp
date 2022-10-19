@@ -118,6 +118,8 @@ stages:
                           ports:
                             - name: go-app-port
                               containerPort: 8000
+                      imagePullSecrets:
+                        - name: "$(imagePullSecret)"
                 ---
                 apiVersion: apps/v1
                 kind: Deployment
@@ -140,6 +142,8 @@ stages:
                           ports:
                             - name: web-port
                               containerPort: 80
+                      imagePullSecrets:
+                        - name: "$(imagePullSecret)"
                 ---
                 apiVersion: v1
                 kind: Service
