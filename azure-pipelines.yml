@@ -189,9 +189,8 @@ stages:
                               port:
                                 name: web-port
               secretType: 'dockerRegistry'
-              containerRegistryType: 'Azure Container Registry'
-              azureSubscriptionEndpointForSecrets: 'Azure Pass - Sponsorship (1575c510-a34c-4b98-a704-027e9f994f54)'
-              azureContainerRegistry: 'azconfdemoacr.azurecr.io'
+              containerRegistryType: 'Container Registry'
+              dockerRegistryEndpoint: 'azdevconfacr-service-connection'
               secretName: '$(imagePullSecret)'
               
             
