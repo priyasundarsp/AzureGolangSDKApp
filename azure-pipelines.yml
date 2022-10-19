@@ -84,7 +84,7 @@ stages:
             displayName: Deploy with K8s CLI
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'azdevconfaks-service-connection'
+              kubernetesServiceEndpoint: 'AZCONFDEMOAKS-default'
               namespace: 'default'
               command: 'apply'
               useConfigurationFile: true
