@@ -83,7 +83,7 @@ stages:
             displayName: Deploy with K8s CLI
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'AZCONFDEMOAKS-azuregolankapp'
+              kubernetesServiceEndpoint: 'AZCONFDEMOAKS-default'
               namespace: 'default'
               command: 'apply'
               useConfigurationFile: true
@@ -189,9 +189,12 @@ stages:
                                 name: web-port
               arguments: '-f'
               secretType: 'dockerRegistry'
-              containerRegistryType: 'Container Registry'
-              dockerRegistryEndpoint: 'AZCONFDEMOACR'
+              containerRegistryType: 'Azure Container Registry'
+              azureSubscriptionEndpointForSecrets: 'Azure Pass - Sponsorship (1575c510-a34c-4b98-a704-027e9f994f54)'
+              azureContainerRegistry: 'azconfdemoacr.azurecr.io'
               secretName: '$(imagePullSecret)'
+              forceUpdate: true
+              
             
           # - task: KubernetesManifest@0
           #   displayName: Create imagePullSecret
