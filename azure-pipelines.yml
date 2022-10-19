@@ -84,7 +84,7 @@ stages:
             displayName: Deploy with K8s CLI
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'priyasundarspFirstGolangApp-1100-AZCONFDEMOAKS-firstgolangapp-1666175414162'
+              kubernetesServiceEndpoint: 'AZCONFDEMOAKS-default'
               namespace: 'default'
               command: 'apply'
               useConfigurationFile: true
