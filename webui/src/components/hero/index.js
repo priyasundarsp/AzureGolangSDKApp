@@ -7,11 +7,11 @@ const Hero = () => (
                 Simple Azure Resource Management
             </p>
             <p className='subtitle has-text-centered'>
-                A sample Golang application to manage Azure resources
+                A sample Golang SDK application to manage Azure resources
             </p>
             <div className='container is-flex-direction-row is-justify-content-center is-align-items-center is-flex mt-6'>
                 <p className='has-text-centered' style={{ maxWidth: "550px" }}>
-                    This demo provides very basic interface to list, create and delete the CosmosDB database accounts, storage accounts, VNet's and static web apps.
+                    This Sample App provides basic interface to list, create and delete the CosmosDB database accounts, storage accounts, VNet's and static web apps.
                 </p>
             </div>
         </div>
