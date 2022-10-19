@@ -12,7 +12,9 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '9e40307b-8ec6-44c2-bb21-8e809e2b95a3'
-  imageRepository: 'priyasundarspazuregolangsdkapp'
+  # imageRepository: 'priyasundarspazuregolangsdkapp'
+  imageRepositoryBE: 'priyasundarspazuregolangsdkapp/server'
+  imageRepositoryFE: 'priyasundarspazuregolangsdkapp/webui'
   containerRegistry: 'azconfdemoacr.azurecr.io'
   dockerfilePathGoApp: 'server/Dockerfile'
   dockerfilePathPreactApp: 'webui/Dockerfile'
@@ -36,7 +38,7 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: $(imageRepositoryBE)
         dockerfile: $(dockerfilePathGoApp)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
@@ -54,7 +56,7 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: $(imageRepositoryFE)
         dockerfile: $(dockerfilePathPreactApp)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
@@ -94,5 +96,6 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+                $(containerRegistry)/$(imageRepositoryBE):$(tag)
+                $(containerRegistry)/$(imageRepositoryFE):$(tag)
 
