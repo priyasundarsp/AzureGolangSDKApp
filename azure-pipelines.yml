@@ -107,8 +107,8 @@ stages:
                     spec:
                       containers:
                         - name: azure-go-app
-                          image: "$(containerRegistry)/$(imageRepositoryBE):latest"
-                          # image: "$(containerRegistry)/$(imageRepositoryBE):$(tag)"
+                          # image: "$(containerRegistry)/$(imageRepositoryBE):latest"
+                          image: "$(containerRegistry)/$(imageRepositoryBE):$(tag)"
                           envFrom:
                             - secretRef:
                                 name: az-sp
@@ -137,8 +137,8 @@ stages:
                     spec:
                       containers:
                         - name: webui
-                          image: "$(containerRegistry)/$(imageRepositoryFE):latest"
-                          # image: "$(containerRegistry)/$(imageRepositoryFE):$(tag)"
+                          # image: "$(containerRegistry)/$(imageRepositoryFE):latest"
+                          image: "$(containerRegistry)/$(imageRepositoryFE):$(tag)"
                           ports:
                             - name: web-port
                               containerPort: 80
